@@ -2,34 +2,44 @@ import { useState } from 'react';
 import { searchMovies, getPopularMovies } from '../services/movieService';
 
 const useMovies = () => {
-  const [movies, setMovies] = useState([]);
+  const [movies, setMovies] = useState<any[]>([]);  
+  const [page, setPage] = useState(1);       
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);  
+  const [hasMore, setHasMore] = useState(true);  
+  const [isSearching, setIsSearching] = useState(false);  
 
-  // Fonction pour rechercher des films
-  const fetchMovies = async (searchTerm: string) => {
+ 
+  const fetchMovies = async (searchTerm: string, newPage = 1) => {
+    if (isLoading) return;  
+    setIsLoading(true);  
+    
     try {
-      const results = await searchMovies(searchTerm);
-      setMovies(results);
+      let results: any[] = [];  
+
+      if (searchTerm && searchTerm.length > 2) {
+        setIsSearching(true); 
+        if (newPage === 1) setMovies([]);
+        results = await searchMovies(searchTerm, newPage); 
+        setMovies(prevMovies => [...prevMovies, ...(results || [])]); 
+        setPage(newPage);  
+        setHasMore(results.length > 0); 
+      } else {
+        setIsSearching(false); 
+        results = await getPopularMovies(); 
+        setMovies(results || []);  
+        setHasMore(false);  
+      }
+
       setError(null);
     } catch (err) {
       setError('Erreur lors de la requête à TMDB.');
-      setMovies([]);
+    } finally {
+      setIsLoading(false); 
     }
   };
 
-  // Fonction pour récupérer les films populaires du mois
-  const fetchPopularMovies = async () => {
-    try {
-      const results = await getPopularMovies();
-      setMovies(results);
-      setError(null);
-    } catch (err) {
-      setError('Erreur lors de la récupération des films populaires.');
-      setMovies([]);
-    }
-  };
-
-  return { movies, fetchMovies, fetchPopularMovies, error };
+  return { movies, fetchMovies, error, isLoading, hasMore, page, isSearching };
 };
 
 export default useMovies;

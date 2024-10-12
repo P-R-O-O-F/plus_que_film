@@ -2,26 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: ;
-  --foreground: ;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: ;
-    --foreground: ;
-  }
-}
 
+
+
+
+
+/* Styles de base */
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Helvetica Neue', sans-serif;
+  background-color: #121212;
+  color: white;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+.scrollbar-hide {
+  -ms-overflow-style: none;  
+  scrollbar-width: none;  
+}
+
+
+
+
+/* Responsive design */
+@media (min-width: 768px) {
+ 
+
+  .text-left {
+    max-width: 600px;
   }
+}
+
+@media (max-width: 768px) {
+  .flex {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  
+}
+
+.text-gray-300 {
+  color: #ccc;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  color: #0858c6;
 }

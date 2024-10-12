@@ -10,8 +10,8 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, onSearch }) => {
     <input
       type="text"
       value={searchTerm}
-      onChange={(e) => onSearch(e.target.value)}
-      className="border p-2 w-full"
+      onChange={(e) => onSearch(e.target.value)}  
+      className="border p-2 w-full mb-8 text-gray-900 bg-gray-100"
       placeholder="Tapez le titre d'un film..."
     />
   );
