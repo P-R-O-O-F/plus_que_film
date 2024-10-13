@@ -53,10 +53,15 @@ En cliquant sur un film, l'utilisateur accède à une page détaillée contenant
 
 ### 4. Panel de suggestions
 Un panel discret et réactif, affichant des films similaires, est accessible sur la page de détails du film. L'utilisateur peut cliquer sur un film pour accéder à sa page de détails.
+
 ### 5.Scroll infini 
  Implémentation du scroll infini pour permettre le chargement continu des films correspondant à la recherche sans devoir changer de page.
+ 
 ### 6. Sauvegarde du terme de recherche
  L'application conserve le terme de recherche dans le `sessionStorage` afin que l'utilisateur puisse revenir à sa recherche après avoir exploré les détails d'un film.
+
+ ### 7. Gestion des pages en erreur 404
+ L'application redirige vers une page par default qui propose de revenir à la Homepage.
 
 ## 🔄 Méthodologie de travail 
 
