@@ -11,7 +11,7 @@
 /* Styles de base */
 body {
   font-family: 'Helvetica Neue', sans-serif;
-  background-color: #121212;
+  background-color: #1a1a1a;
   color: white;
 }
 .scrollbar-hide::-webkit-scrollbar {

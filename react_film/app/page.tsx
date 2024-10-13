@@ -1,81 +1,118 @@
-'use client';
+"use client";
 
 import { useState, useEffect, useRef } from 'react';
 import SearchBar from './components/SearchBar';
 import MovieList from './components/MovieList';
-import useMovies from './hooks/useMovies';
+import { searchCombined, getPopularMovies } from './services/movieService';
 import { useRouter } from 'next/navigation';
 
 const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState<string>(''); 
+  const [movies, setMovies] = useState<any[]>([]);  
   const [initialLoad, setInitialLoad] = useState<boolean>(true); 
+  const [page, setPage] = useState<number>(1);  
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);  
+  const [error, setError] = useState<string | null>(null); 
+
   const searchTriggered = useRef(false); 
-  const { movies, fetchMovies, error, isLoading, hasMore, page, isSearching } = useMovies();
   const router = useRouter();
 
-  // Charger le terme de recherche stocké au chargement initial
   useEffect(() => {
     if (initialLoad) {
       const savedSearchTerm = sessionStorage.getItem('searchTerm');
       if (savedSearchTerm) {
-        setSearchTerm(savedSearchTerm); // Réinitialiser la recherche à partir de sessionStorage
+        setSearchTerm(savedSearchTerm);
+        searchCombined(savedSearchTerm, 1)
+          .then(fetchedMovies => {
+            setMovies(fetchedMovies);
+            setHasMore(fetchedMovies.length >= 16); 
+          })
+          .catch(() => setError('Erreur lors du chargement des films'));  
       } else {
-        fetchMovies('', 1); // Afficher les films populaires par défaut
+        getPopularMovies()
+          .then(fetchedMovies => {
+            setMovies(fetchedMovies);
+            setHasMore(fetchedMovies.length >= 16);  
+          })
+          .catch(() => setError('Erreur lors du chargement des films populaires'));  
       }
       setInitialLoad(false);
     }
-  }, [fetchMovies, initialLoad]);
+  }, [initialLoad]);
 
-  // Déclencher la recherche lorsqu'on change le terme de recherche (après le retour à la page)
   useEffect(() => {
     if (!initialLoad && !searchTriggered.current) {
-      if (searchTerm === '' || searchTerm.length >= 3) {
-        fetchMovies(searchTerm, 1); // Lancer la recherche
-        sessionStorage.setItem('searchTerm', searchTerm); // Sauvegarder dans sessionStorage
-        searchTriggered.current = true; // Marquer la recherche comme déclenchée
+      setPage(1);  
+      if (searchTerm === '') {
+        
+        getPopularMovies()
+          .then(fetchedMovies => {
+            setMovies(fetchedMovies);
+            setHasMore(fetchedMovies.length >= 16);
+          })
+          .catch(() => setError('Erreur lors du chargement des films populaires'));  
+      } else if (searchTerm.length >= 3) {
+        searchCombined(searchTerm, 1)
+          .then(fetchedMovies => {
+            setMovies(fetchedMovies);
+            setHasMore(fetchedMovies.length >= 16);
+          })
+          .catch(() => setError('Erreur lors de la recherche de films'));
+        sessionStorage.setItem('searchTerm', searchTerm);
       }
+      searchTriggered.current = true;
     }
-  }, [searchTerm, fetchMovies, initialLoad]);
+  }, [searchTerm]);
 
-  // Gestion du champ de recherche
   const handleSearch = (term: string) => {
     setSearchTerm(term);
-    searchTriggered.current = false; // Permettre une nouvelle recherche
+    searchTriggered.current = false; 
   };
 
-  // Gestion du clic sur un film
+
   const handleMovieClick = (id: number) => {
-    sessionStorage.setItem('searchTerm', searchTerm); // Sauvegarder le terme avant de naviguer
+    sessionStorage.setItem('searchTerm', searchTerm); 
     router.push(`/movies/${id}`);
   };
 
-  // Gestion du scroll pour le chargement de films supplémentaires
-  useEffect(() => {
-    if (!isSearching) return;
 
+  useEffect(() => {
     const handleScroll = () => {
       if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 500) {
         if (hasMore && !isLoading) {
-          fetchMovies(searchTerm, page + 1); // Charger la page suivante
+          setIsLoading(true);
+          const nextPage = page + 1;
+          setPage(nextPage); 
+          searchCombined(searchTerm, nextPage)
+            .then(fetchedMovies => {
+              setMovies(prevMovies => [...prevMovies, ...fetchedMovies]); 
+              setHasMore(fetchedMovies.length >= 16);  
+            })
+            .catch(() => setError('Erreur lors du chargement des films supplémentaires'))  
+            .finally(() => setIsLoading(false));  
         }
       }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [searchTerm, page, hasMore, isLoading, fetchMovies, isSearching]);
+  }, [searchTerm, page, hasMore, isLoading]);
 
   return (
-    <div className="container mx-auto p-5">
-      <h1 className="text-4xl font-bold mb-4">Rechercher un film</h1>
+    <div
+      className="container mx-auto p-5 min-h-screen"
+      style={{      }}
+    >
+      <h1 className="text-4xl font-bold mb-4 text-white">Rechercher un film</h1>
       <SearchBar searchTerm={searchTerm} onSearch={handleSearch} />
 
       {error && <p className="text-red-500">{error}</p>}
 
       <MovieList movies={movies} onMovieClick={handleMovieClick} />
 
-      {isLoading && <p className="text-center mt-5">Chargement...</p>}
-      {!hasMore && isSearching && !isLoading && <p className="text-center mt-5">Tous les films ont été chargés.</p>}
+      {isLoading && <p className="text-center mt-5 text-white">Chargement...</p>}
+      {!hasMore && !isLoading && <p className="text-center mt-5 text-white">Tous les films ont été chargés.</p>}
     </div>
   );
 };

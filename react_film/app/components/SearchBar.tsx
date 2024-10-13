@@ -2,26 +2,26 @@ import React, { useState, useEffect, useCallback } from 'react';
 
 interface SearchBarProps {
   searchTerm: string;
-  onSearch: (term: string) => void;
+  onSearch: (term: string, type: string) => void; 
 }
 
 const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, onSearch }) => {
-  const [inputValue, setInputValue] = useState(searchTerm); // Synchroniser avec le searchTerm
+  const [inputValue, setInputValue] = useState(searchTerm); 
+  const [searchType, setSearchType] = useState('movie'); 
 
   const debouncedSearch = useCallback(
     (value: string) => {
       const timer = setTimeout(() => {
         if (value.length >= 3 || value === '') {
-          onSearch(value);  
+          onSearch(value, searchType);  
         }
       }, 600);
 
       return () => clearTimeout(timer);
     },
-    [onSearch]
+    [onSearch, searchType] 
   );
 
-  // Mettre à jour l'inputValue lorsque searchTerm change (utile après un retour à la page)
   useEffect(() => {
     setInputValue(searchTerm);
   }, [searchTerm]);
@@ -31,13 +31,15 @@ const SearchBar: React.FC<SearchBarProps> = ({ searchTerm, onSearch }) => {
   }, [inputValue, debouncedSearch]);
 
   return (
-    <input
-      type="text"
-      value={inputValue}
-      onChange={(e) => setInputValue(e.target.value)}
-      className="border p-2 w-full mb-8 text-gray-900 bg-gray-100"
-      placeholder="Tapez le titre d'un film..."
-    />
+    <div className="mb-8">
+      <input
+        type="text"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        className="border p-2 w-full text-gray-900 bg-gray-100"
+        placeholder={`Rechercher par ${searchType === 'movie' ? 'titre de film' : searchType === 'person' ? 'acteur/réalisateur' : 'studio de production'}...`}
+      />
+    </div>
   );
 };
 

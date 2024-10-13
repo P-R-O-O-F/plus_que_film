@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { getMovieDetails } from "../../services/movieService";
-import SuggestionPanel from '../../components/SuggestionPanel'; // Importer le nouveau composant
+import SuggestionPanel from '../../components/SuggestionPanel';
 import { FaHourglassHalf } from "react-icons/fa";
 import CastList from '../../components/CastList'; 
 
@@ -12,9 +12,9 @@ const MovieDetail = () => {
   const router = useRouter();
   const [movieDetails, setMovieDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [isSuggestionOpen, setIsSuggestionOpen] = useState(false); // Gérer l'état du panel de suggestions
+  const [isSuggestionOpen, setIsSuggestionOpen] = useState(false);
 
-  const searchTerm = localStorage.getItem("searchTerm");
+  const searchTerm = localStorage.getItem("searchTerm"); 
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -64,7 +64,7 @@ const MovieDetail = () => {
           <button
             className="text-blue-500"
             onClick={() => {
-              router.push(`/?searchTerm=${searchTerm}`);
+              router.push(`/?searchTerm=${searchTerm}`); 
             }}
           >
             ← Retour à la recherche
@@ -123,8 +123,8 @@ const MovieDetail = () => {
                       cx="32"
                       cy="32"
                       strokeDasharray="151"
-                      strokeDashoffset={`calc(151 - (151 * ${voteAveragePercentage}) / 100)`} // Progrès du pourcentage
-                      transform="rotate(-90 32 32)" // Rotation
+                      strokeDashoffset={`calc(151 - (151 * ${voteAveragePercentage}) / 100)`}
+                      transform="rotate(-90 32 32)"
                     />
                   </svg>
                 </div>
@@ -146,7 +146,7 @@ const MovieDetail = () => {
             </div>
 
             {creator && (
-              <div className="text-lg text-gray-300 mt-4 flex items-center gap-14">
+              <div className="text-lg text-gray-300 mt-4 flex justify-between items-center">
                 <div>
                   <h2 className="text-2xl font-bold mb-2">Créateur/Créatrice</h2>
                   <p>{creator}</p>
@@ -155,7 +155,7 @@ const MovieDetail = () => {
                   onClick={() => setIsSuggestionOpen(true)}
                   className="px-4 py-1 bg-white bg-opacity-20 text-gray-300  rounded-full hover:bg-opacity-50 transition-all" 
                 >
-                  Vous aimeriez aussi...
+                  Vous aimeriez aussi... ?
                 </button>
               </div>
             )}
@@ -164,7 +164,6 @@ const MovieDetail = () => {
 
         <CastList cast={movieDetails.credits.cast} />
 
-        {/* Ajouter le panel de suggestions */}
         <SuggestionPanel
           movieId={Number(id)}
           isOpen={isSuggestionOpen}
