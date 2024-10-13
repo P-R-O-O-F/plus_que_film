@@ -1,4 +1,4 @@
-"use client"; // Assure-toi que c'est bien un client component
+"use client"; 
 
 import { createContext, useContext, useState, ReactNode } from 'react';
 

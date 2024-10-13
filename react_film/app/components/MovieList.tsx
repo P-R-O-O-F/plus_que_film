@@ -10,9 +10,10 @@ interface MovieListProps {
     poster_path: string;
     vote_average: number;
   }>;
+  onMovieClick: (id: number) => void;  
 }
 
-const MovieList: React.FC<MovieListProps> = ({ movies }) => {
+const MovieList: React.FC<MovieListProps> = ({ movies, onMovieClick }) => {
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {movies.map((movie) => (
@@ -24,6 +25,7 @@ const MovieList: React.FC<MovieListProps> = ({ movies }) => {
           overview={movie.overview}
           posterUrl={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
           voteAverage={movie.vote_average}
+          onClick={onMovieClick}  
         />
       ))}
     </div>

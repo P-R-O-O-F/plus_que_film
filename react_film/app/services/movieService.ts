@@ -10,6 +10,8 @@ export const searchMovies = async (searchTerm: string, page: number = 1) => {
       query: searchTerm,
       language: 'fr-FR',
       region: 'FR',
+      sort_by: 'popularity.desc',
+      include_adult: true,
       page: page, 
     },
   });
@@ -26,11 +28,32 @@ export const getMovieDetails = async (id: number) => {
     },
     params: {
       language: 'fr-FR',
-      append_to_response: 'credits', 
+      append_to_response: 'credits',
+      
     },
   });
   return response.data;  
 };
+
+export const searchMovieSuggestions = async (searchTerm: string) => {
+  const response = await axios.get('https://api.themoviedb.org/3/search/movie', {
+    headers: {
+      Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_KEY}`,
+    },
+    params: {
+      query: searchTerm,
+      language: 'fr-FR',
+      region: 'FR',
+      sort_by: 'popularity.desc',  // Trier par popularité
+      include_adult: false,  // Exclure les films pour adultes
+      page: 1,  // Limiter à la première page
+    },
+  });
+
+  // Limiter les suggestions à un maximum de 5 films populaires
+  return response.data.results.slice(0, 5);
+};
+
 
 
 
@@ -51,7 +74,7 @@ export const getPopularMovies = async () => {
       language: 'fr-FR',
       region: 'FR',
       sort_by: 'popularity.desc',
-      include_adult: false,
+      include_adult: true,
       include_video: false,
       'primary_release_date.gte': lastMonthFormatted, 
       'primary_release_date.lte': todayFormatted,     

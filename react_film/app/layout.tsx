@@ -32,7 +32,7 @@ export default function RootLayout({
     <html lang="fr">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <MovieProvider> 
-          <header className="bg-gray-900 text-white p-4 flex items-center justify-between">
+          <header className="background-color=#0d253f text-white p-4 flex items-center justify-between">
             <div className="flex items-center">
               <Image
                 src="/tmdb.svg"

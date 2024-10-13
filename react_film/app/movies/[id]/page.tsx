@@ -1,52 +1,18 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import { getMovieDetails } from "../../services/movieService";
-import { useRouter } from "next/navigation";
 import { FaHourglassHalf } from "react-icons/fa";
+import CastList from '../../components/CastList'; 
 
 const MovieDetail = () => {
   const { id } = useParams();
   const router = useRouter();
   const [movieDetails, setMovieDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const autoScrollRef = useRef<NodeJS.Timeout | null>(null);
-
-  const scrollCarousel = (direction: "left" | "right") => {
-    if (carouselRef.current) {
-      const scrollAmount = 155; 
-      if (direction === "left") {
-        carouselRef.current.scrollBy({
-          left: -scrollAmount,
-          behavior: "smooth",
-        });
-      } else {
-        carouselRef.current.scrollBy({
-          left: scrollAmount,
-          behavior: "smooth",
-        });
-      }
-    }
-  };
-
-  const startAutoScroll = (direction: "left" | "right") => {
-    const scrollAmount = 3; 
-    autoScrollRef.current = setInterval(() => {
-      if (direction === "left") {
-        carouselRef.current!.scrollLeft -= scrollAmount;
-      } else if (direction === "right") {
-        carouselRef.current!.scrollLeft += scrollAmount;
-      }
-    }, 10); 
-  };
-
-
-  const stopAutoScroll = () => {
-    if (autoScrollRef.current) clearInterval(autoScrollRef.current);
-  };
-
+  
+  const searchTerm = localStorage.getItem("searchTerm"); 
 
   useEffect(() => {
     const fetchMovieDetails = async () => {
@@ -93,7 +59,12 @@ const MovieDetail = () => {
 
       <div className="relative w-full max-w-6xl mx-auto">
         <div className="mb-10 z-10 relative">
-          <button className="text-blue-500" onClick={() => router.back()}>
+          <button
+            className="text-blue-500"
+            onClick={() => {
+              router.push(`/?searchTerm=${searchTerm}`);
+            }}
+          >
             ← Retour à la recherche
           </button>
         </div>
@@ -181,68 +152,7 @@ const MovieDetail = () => {
           </div>
         </div>
 
-        {/* Bloc de casting avec carrousel pour les grands écrans */}
-        <div className="mt-10">
-          <h2 className="text-2xl font-bold mb-4">Casting</h2>
-
-          {/* Carrousel pour les grands écrans */}
-          <div className="relative hidden md:block">
-            <button
-              onClick={() => scrollCarousel("left")}
-              onMouseEnter={() => startAutoScroll("left")}
-              onMouseLeave={stopAutoScroll}
-              className="absolute left-0 top-0 bottom-0 z-10 bg-black bg-opacity-50 text-white p-2"
-            >
-              ←
-            </button>
-
-            <div
-              ref={carouselRef}
-              className="flex space-x-4 overflow-x-scroll scrollbar-hide"
-              style={{ scrollSnapType: "x mandatory" }}
-            >
-              {movieDetails.credits?.cast.map((actor: any) => (
-                <div key={actor.id} className="w-24 flex-shrink-0">
-                  <img
-                    src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
-                    alt={actor.name}
-                    className="w-full h-auto rounded-lg mb-2"
-                  />
-                  <p className="text-white font-bold text-xs">{actor.name}</p>
-                  <p className="text-gray-400 text-xs">{actor.character}</p>
-                </div>
-              ))}
-            </div>
-
-            <button
-              onClick={() => scrollCarousel("right")}
-              onMouseEnter={() => startAutoScroll("right")}
-              onMouseLeave={stopAutoScroll}
-              className="absolute right-0 top-0 bottom-0 z-10 bg-black bg-opacity-50 text-white p-2"
-            >
-              →
-            </button>
-          </div>
-
-          {/* Grille pour les petits écrans */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 md:hidden">
-            {movieDetails.credits?.cast.map((actor: any) => (
-              <div key={actor.id} className="text-center">
-                {actor.profile_path ? (
-                  <img
-                    src={`https://image.tmdb.org/t/p/w200${actor.profile_path}`}
-                    alt={actor.name}
-                    className="w-full h-auto rounded-lg mb-2"
-                  />
-                ) : (
-                  <div className="w-full h-48 bg-gray-800 rounded-lg mb-2"></div>
-                )}
-                <p className="text-white font-bold text-xs">{actor.name}</p>
-                <p className="text-gray-400 text-xs">{actor.character}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        <CastList cast={movieDetails.credits.cast} />
       </div>
     </div>
   );
