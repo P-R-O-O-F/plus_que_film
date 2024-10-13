@@ -22,21 +22,24 @@ Le projet **Plus Que Film** a été réalisé dans le cadre d'un test technique 
 ## 🛠️ Technologies utilisées
 
 - **React** : Bibliothèque JavaScript pour construire l'interface utilisateur.
+
 - **Next.js** : Framework React pour le rendu côté serveur et les pages dynamiques.
+
 - **TypeScript** : Langage de programmation typé pour améliorer la qualité du code et éviter les erreurs.
+
 - **Tailwind CSS** : Framework CSS pour styliser rapidement et de manière efficace l'application.
+
 - **Axios** : Librairie pour effectuer des requêtes HTTP à l'API TMDb.
+
 - **API The Movie Database (TMDb)** : Utilisée pour récupérer les informations sur les films, leur casting, et les films populaires.
 
 ## 🚀 Fonctionnalités réalisées
 
  ### 1. Recherche avancée de films 
-L'utilisateur peut saisir un titre de film, un nom d'acteur, de réalisateur ou un studio de production dans une barre de recherche unique. Grâce à une recherche combinée, le système renvoie tous les résultats pertinents (films en lien avec le titre, films où l'acteur/réalisateur est présent, ou produits par le studio). Les résultats sont triés selon la pertinence par rapport au terme de recherche pour que l'utilisateur puisse voir en priorité les résultats les plus proches du terme saisi.
+L'utilisateur peut saisir un titre de film, un nom d'acteur, de réalisateur ou un studio de production dans une barre de recherche unique. Grâce à une recherche combinée, le système renvoie tous les résultats pertinents (films en lien avec le titre, films où l'acteur/réalisateur est présent, ou film produits par le studio). Les résultats sont triés selon la pertinence par rapport au terme de recherche pour que l'utilisateur puisse voir en priorité les résultats les plus proches du terme saisi.
 
 ### 2. Tri par pertinence
-Les films sont triés en fonction de la proximité entre le terme de recherche et les titres des films. Par exemple, si l'utilisateur cherche "Harry", les films dont le titre contient "Harry" seront affichés en premier, suivis des films où l'acteur ou le réalisateur est pertinent.
-
-
+Les films sont triés en fonction de la proximité entre le terme de recherche et les titres des films. Par exemple, si l'utilisateur cherche "Harry", les films dont le titre contient "Harry" seront affichés en premier, suivis des films où l'acteur ou bien le réalisateur est pertinent.
 
 ### 3. Détails d'un film
 En cliquant sur un film, l'utilisateur accède à une page détaillée contenant :
@@ -78,6 +81,84 @@ J'ai régulièrement consulté les documentations officielles suivantes pour m'a
 Afin de m'assurer de l'implémentation correcte de certaines fonctionnalités, notamment le scroll infini, j'ai visionné des tutoriels sur YouTube, ce qui m'a permis de m'assurer que ma mise en œuvre était performante et optimisée.
 
 Cette approche m'a permis de surmonter rapidement les obstacles tout en garantissant une solution efficace et fiable.
+
+
+
+## ⚙️ Installation et utilisation du projet
+
+### 1. Prérequis
+
+Avant de commencer, assurez-vous d'avoir les éléments suivants installés sur votre machine :
+
+- **Node.js** : Version 16+ recommandée
+- **npm** ou **yarn** : Gestionnaire de paquets JavaScript
+
+### 2. Cloner le projet
+
+Clonez ce dépôt GitHub sur votre machine locale en exécutant la commande suivante :
+
+```bash
+git clone https://github.com/P-R-O-O-F/plus_que_film.git
+cd .\react_film\
+```
+
+### 3. Installation des dépendances
+
+Installez les dépendances nécessaires au projet en exécutant :
+
+```bash
+npm install
+```
+
+ou avec yarn :
+
+```bash
+yarn install
+```
+
+### 4. Configuration de l'API TMDb
+
+Le projet utilise l'API de The Movie Database (TMDb). Vous devez obtenir une clé API TMDb en vous inscrivant sur TMDb et en créant une nouvelle API Key.
+
+Ensuite, créez un fichier **.env.local** à la racine du dossier **react_film** et ajoutez-y votre clé API :
+
+```bash
+NEXT_PUBLIC_TMDB_API_KEY=your_api_key_here
+```
+
+### 5. Lancer l'application
+
+Une fois les dépendances installées et la configuration API faite, vous pouvez lancer l'application en mode développement avec la commande suivante :
+
+```bash
+npm run dev
+```
+
+ou avec yarn :
+
+```bash
+yarn dev
+```
+
+L'application sera accessible à l'adresse http://localhost:3000.
+
+### 6. Build pour la production
+
+Pour compiler le projet en mode production, exécutez la commande suivante :
+
+```bash
+npm run build
+```
+
+Cela générera un dossier **/.next** contenant les fichiers prêts à être déployés.
+
+### 7. Lancer les tests
+
+Pour lancer les tests, exécutez la commande suivante :
+
+```bash
+npm test
+```
 
 ## 🧩 Documentation technique
 
@@ -209,82 +290,6 @@ export const searchCombined = async (searchTerm: string, page: number = 1) => {
 };
 ```
 
-## ⚙️ Installation et utilisation du projet
-
-### 1. Prérequis
-
-Avant de commencer, assurez-vous d'avoir les éléments suivants installés sur votre machine :
-
-- **Node.js** : Version 16+ recommandée
-- **npm** ou **yarn** : Gestionnaire de paquets JavaScript
-
-### 2. Cloner le projet
-
-Clonez ce dépôt GitHub sur votre machine locale en exécutant la commande suivante :
-
-```bash
-git clone https://github.com/P-R-O-O-F/plus_que_film.git
-cd .\react_film\
-```
-
-### 3. Installation des dépendances
-
-Installez les dépendances nécessaires au projet en exécutant :
-
-```bash
-npm install
-```
-
-ou avec yarn :
-
-```bash
-yarn install
-```
-
-### 4. Configuration de l'API TMDb
-
-Le projet utilise l'API de The Movie Database (TMDb). Vous devez obtenir une clé API TMDb en vous inscrivant sur TMDb et en créant une nouvelle API Key.
-
-Ensuite, créez un fichier **.env.local** à la racine du dossier **react_film** et ajoutez-y votre clé API :
-
-```bash
-NEXT_PUBLIC_TMDB_API_KEY=your_api_key_here
-```
-
-### 5. Lancer l'application
-
-Une fois les dépendances installées et la configuration API faite, vous pouvez lancer l'application en mode développement avec la commande suivante :
-
-```bash
-npm run dev
-```
-
-ou avec yarn :
-
-```bash
-yarn dev
-```
-
-L'application sera accessible à l'adresse http://localhost:3000.
-
-### 6. Build pour la production
-
-Pour compiler le projet en mode production, exécutez la commande suivante :
-
-```bash
-npm run build
-```
-
-Cela générera un dossier **/.next** contenant les fichiers prêts à être déployés.
-
-### 7. Lancer les tests (à venir)
-
-Pour lancer les tests, exécutez la commande suivante :
-
-```bash
-npm test
-```
-
 ----
 
-Ce fichier README vous donne une vue d'ensemble complète du projet Plus Que Film, des fonctionnalités développées, ainsi que des technologies utilisées. Le projet témoigne non seulement de mes compétences en développement frontend, mais aussi de ma capacité à résoudre les problèmes, à utiliser des ressources en ligne et à adapter des solutions aux besoins réels du projet.
+Ce fichier README vous donne une vue d'ensemble complète du projet **Plus Que Film**, des fonctionnalités développées, ainsi que des technologies utilisées. Le projet témoigne non seulement de mes compétences en développement frontend, mais aussi de ma capacité à résoudre les problèmes, à utiliser des ressources en ligne et à adapter des solutions aux besoins réels du projet.
