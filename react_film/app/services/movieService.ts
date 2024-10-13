@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Recherche de films par titre
 export const searchMovies = async (searchTerm: string, page: number = 1) => {
   const response = await axios.get('https://api.themoviedb.org/3/search/movie', {
     headers: {
@@ -19,7 +18,6 @@ export const searchMovies = async (searchTerm: string, page: number = 1) => {
 };
 
 
-// Fonction pour récupérer les détails complets d'un film via son ID
 export const getMovieDetails = async (id: number) => {
   const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY;
   const response = await axios.get(`https://api.themoviedb.org/3/movie/${id}`, {
@@ -35,26 +33,22 @@ export const getMovieDetails = async (id: number) => {
   return response.data;  
 };
 
-export const searchMovieSuggestions = async (searchTerm: string) => {
-  const response = await axios.get('https://api.themoviedb.org/3/search/movie', {
+export const getSimilarMovies = async (movieId: number) => {
+  const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/similar`, {
     headers: {
       Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_API_KEY}`,
     },
     params: {
-      query: searchTerm,
       language: 'fr-FR',
-      region: 'FR',
-      sort_by: 'popularity.desc',  // Trier par popularité
-      include_adult: false,  // Exclure les films pour adultes
-      page: 1,  // Limiter à la première page
+      page: 1,
     },
   });
 
-  // Limiter les suggestions à un maximum de 5 films populaires
-  return response.data.results.slice(0, 5);
+  // Extraire les 6 premiers films et trier par ordre de pertinence (déjà trié par TMDB)
+  const movies = response.data.results.slice(0, 6);
+  
+  return movies; // Retourner les films
 };
-
-
 
 
 export const getPopularMovies = async () => {
